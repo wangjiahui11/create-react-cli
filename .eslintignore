@@ -1,2 +1,5 @@
-comfig/
+.husky/
+config/
+scripts/
+public/
 webpack.config.js
