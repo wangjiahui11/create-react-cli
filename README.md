@@ -135,7 +135,7 @@ npm lint-staged husky -D
 
 ```
  {
-   	"*.{js,jsx,ts,tsx}": ["prettier --write ."],
+   	"./src/*.{js,jsx,tsx,ts,less,md}": ["prettier --write", "git add"],
     "*.md": ["prettier --write"]
   },
 ```
