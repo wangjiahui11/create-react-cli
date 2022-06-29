@@ -62,7 +62,8 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "prepare": "husky install",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "precommit": "lint-staged"
   },
   "config": {
     "commitizen": {
@@ -149,5 +150,8 @@
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "prettier": "2.7.1"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
   }
 }
