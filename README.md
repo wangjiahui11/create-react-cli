@@ -102,36 +102,55 @@ module.exports = {
 ### 四.代码提交规范
 
 - **husky**
-  - 操作 git 钩子的工具
+
+  操作 git 钩子的工具
+
 - **lint-staged**
-  - 本地暂存代码检查工具
-- **commitlint**
-  - commit 信息校验工具
+
+  本地暂存代码检查工具
+
 - **commitizen**
 
-安装步骤
+  代码提交规范
+
+  
+
+- **安装husky及配置**
 
 ```
-npm i lint-staged husky -D
+npm i husky -D
 npm set-script prepare "husky install" # 在package.json中添加脚本
-npm run prepare # 初始化husky,将 git hooks 钩子交由,husky执行
-```
-
-- **初始化husky**
-
-```
 npx husky add .husky/pre-commit "npx lint-staged"
 ```
 
-- 配置lint-staged的操作
+
+
+- **安装list-staged，并创建 .lintstagedrc.json 文件控制检查和操作方式**
 
 ```
-  "lint-staged": {
-    "**/*.less": "stylelint verbose --fix --custom-syntax postcss-less",
-    "**/*.{js,jsx,ts,tsx}": "eslint --fix",
-    "**/*.{js,jsx,tsx,ts,less,md,json}": [
-      "prettier --write"
-    ]
+npm lint-staged husky -D
+```
+
+ **.lintstagedrc.json**
+
+```
+ {
+   	"*.{js,jsx,ts,tsx}": ["prettier --write ."],
+    "*.md": ["prettier --write"]
   },
+```
+
+```
+npm run prepare # 初始化husky,将 git hooks 钩子交由,husky执行
+```
+
+
+
+- **commitizen安装**
+
+```
+npm i commitizen cz-conventional-changelog -D
+# package.json 中添加 commit 指令, 执行 `git-cz` 指令
+npm set-script commit "git-cz" 
 ```
 
