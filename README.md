@@ -1,70 +1,137 @@
-# Getting Started with Create React App
+## react脚手架的工程化配置
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 一.创建Create React App
 
-## Available Scripts
+```
+npx create-react-app create-react-cli
+cd create-react-cli
+// eject 命令执行后会将封装在 create-react-app 中的配置全部反编译到当前项目，这样用户就能完全取得 webpack 文件的控制权。
+npm run eject 
+npm install
+```
 
-In the project directory, you can run:
+二.初始化Eslint
 
-### `npm start`
+```
+npx eslint --init // 创建.eslintrc.js
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- rules的配置
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+ rules: {
+        quotes: [1, 'single'], //单引号
+        'no-console': 0, //不禁用console
+        'no-debugger': 2, //禁用debugger
+        semi: 0, //不强制使用分号
+        camelcase: 0, //强制驼峰法命名
+        radix: [1, 'as-needed'],
+        'no-unused-vars': 0,
+    },
+```
 
-### `npm test`
+- 创建Eslint忽略文件
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  ```
+  echo > .eslintignore
+  ```
 
-### `npm run build`
+### 三.代码风格工具perttier的配置
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+npm install --save-dev --save-exact prettier
+或
+yarn add --dev --exact prettier
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- 创建 .prettierrc.js配置文件
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+module.exports = {
+  // 一行最多 100 字符
+  printWidth: 100,
+  // 不使用缩进符，而使用空格
+  useTabs: false,
+  // 使用 2 个空格缩进
+  tabWidth: 2,
+  tabSize: 2,
+  // 行尾需要有分号
+  semi: false,
+  // 使用单引号
+  singleQuote: true,
+  // 对象的 key 仅在必要时用引号
+  quoteProps: 'as-needed',
+  // jsx 不使用单引号，而使用双引号
+  jsxSingleQuote: false,
+  // 末尾不需要逗号 'es5'  none
+  trailingComma: 'es5',
+  // 大括号内的首尾需要空格
+  bracketSpacing: true,
+  // jsx 标签的反尖括号需要换行
+  jsxBracketSameLine: false,
+  // 箭头函数，只有一个参数的时候，也需要括号
+  arrowParens: 'always',
+  // 每个文件格式化的范围是文件的全部内容
+  rangeStart: 0,
+  rangeEnd: Infinity,
+  // 不需要写文件开头的 @prettier
+  requirePragma: false,
+  // 不需要自动在文件开头插入 @prettier
+  insertPragma: false,
+  // 使用默认的折行标准
+  proseWrap: 'preserve',
+  // 根据显示样式决定 html 要不要折行
+  htmlWhitespaceSensitivity: 'css',
+  // 换行符使用 lf 结尾是 \n \r \n\r auto
+  endOfLine: 'auto',
+};
+```
 
-### `npm run eject`
+[prettier的Option配置参数](https://prettier.io/docs/en/options.html)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **创建 .prettierignore的忽略文件**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  ```
+  **/*.md
+  **/*.svg
+  **/*.ejs
+  **/*.html
+  package.json
+  ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 四.代码提交规范
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **husky**
+  - 操作 git 钩子的工具
+- **lint-staged**
+  - 本地暂存代码检查工具
+- **commitlint**
+  - commit 信息校验工具
+- **commitizen**
 
-## Learn More
+安装步骤
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+npm i lint-staged husky -D
+npm set-script prepare "husky install" # 在package.json中添加脚本
+npm run prepare # 初始化husky,将 git hooks 钩子交由,husky执行
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **初始化husky**
 
-### Code Splitting
+```
+npx husky add .husky/pre-commit "npx lint-staged"
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- 配置lint-staged的操作
 
-### Analyzing the Bundle Size
+```
+  "lint-staged": {
+    "**/*.less": "stylelint verbose --fix --custom-syntax postcss-less",
+    "**/*.{js,jsx,ts,tsx}": "eslint --fix",
+    "**/*.{js,jsx,tsx,ts,less,md,json}": [
+      "prettier --write"
+    ]
+  },
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
